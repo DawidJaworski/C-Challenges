@@ -1,9 +1,6 @@
-https://www.reddit.com/r/dailyprogrammer/comments/20l2it/17042014_challenge_153_easy_pascals_pyramid/
+# (Easy): [Pascal's Pyramid](https://www.reddit.com/r/dailyprogrammer/comments/20l2it/17042014_challenge_153_easy_pascals_pyramid/)
 
-# (Easy): Pascal's Pyramid
-
-You may have seen Pascal's Triangle before. It has been known about for a long time now and is a very simple concept - it makes several appearances in mathematics, one of which is when you calculate the binomial expansion
--> https://en.wikipedia.org/wiki/Binomial_theorem.
+You may have seen Pascal's Triangle before. It has been known about for a long time now and is a very simple concept - it makes several appearances in mathematics, one of which is when you calculate the [binomial expansion](https://en.wikipedia.org/wiki/Binomial_theorem).
 If you've not seen it before, you can calculate it by first putting 1 on the outermost numbers:
 ```
     1
@@ -97,8 +94,8 @@ Challenge Input
 ```
 # Notes
 
-There are ways to quickly do this that use the Factorial function. http://en.wikipedia.org/wiki/Factorial
+There are ways to quickly do this that use the [Factorial function](http://en.wikipedia.org/wiki/Factorial)
 Also, look at the pattern the 'rows' make in relation to the leftmost and rightmost number and Pascal's triangle.
-Reading material on Pascal's Pyramid can be found here http://en.wikipedia.org/wiki/Pascal%27s_pyramid
+Reading material on Pascal's Pyramid can be found [here](http://en.wikipedia.org/wiki/Pascal%27s_pyramid)
 Jagged multidimensional arrays will come in handy here.
 I'm still trying to gauge relative challenge difficulty, so please excuse me and let me know if this is too challenging for an Easy rating.
