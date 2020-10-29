@@ -97,12 +97,8 @@ Challenge Input
 ```
 # Notes
 
-There are ways to quickly do this that use the Factorial function
-. Also, look at the pattern the 'rows' make in relation to the leftmost and rightmost number and Pascal's triangle.
-Reading material on Pascal's Pyramid can be found here
-
-.
-
+There are ways to quickly do this that use the Factorial function. http://en.wikipedia.org/wiki/Factorial
+Also, look at the pattern the 'rows' make in relation to the leftmost and rightmost number and Pascal's triangle.
+Reading material on Pascal's Pyramid can be found here http://en.wikipedia.org/wiki/Pascal%27s_pyramid
 Jagged multidimensional arrays will come in handy here.
-
 I'm still trying to gauge relative challenge difficulty, so please excuse me and let me know if this is too challenging for an Easy rating.
