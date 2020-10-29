@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "main.h"
 
 // Create pyramid class
@@ -8,7 +7,6 @@
 //  - Row number
 //  - list of elements (uint)
 //  > printRow() function
-
 
 int main(){
   printf("[17042014] Challenge #153 [Easy] Pascal's Pyramid:\n");
