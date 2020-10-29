@@ -1,6 +1,6 @@
 https://www.reddit.com/r/dailyprogrammer/comments/20l2it/17042014_challenge_153_easy_pascals_pyramid/
 
-#(Easy): Pascal's Pyramid
+# (Easy): Pascal's Pyramid
 
 You may have seen Pascal's Triangle before. It has been known about for a long time now and is a very simple concept - it makes several appearances in mathematics, one of which is when you calculate the binomial expansion
 -> https://en.wikipedia.org/wiki/Binomial_theorem.
@@ -95,7 +95,7 @@ Challenge Input
 ```
 14
 ```
-##Notes
+# Notes
 
 There are ways to quickly do this that use the Factorial function
 . Also, look at the pattern the 'rows' make in relation to the leftmost and rightmost number and Pascal's triangle.
