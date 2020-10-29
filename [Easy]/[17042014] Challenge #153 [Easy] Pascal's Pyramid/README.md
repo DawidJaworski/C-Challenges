@@ -5,17 +5,16 @@ https://www.reddit.com/r/dailyprogrammer/comments/20l2it/17042014_challenge_153_
 (Easy): Pascal's Pyramid
 
 You may have seen Pascal's Triangle before. It has been known about for a long time now and is a very simple concept - it makes several appearances in mathematics, one of which is when you calculate the binomial expansion
--> https://en.wikipedia.org/wiki/Binomial_theorem
-
-.
+-> https://en.wikipedia.org/wiki/Binomial_theorem.
 If you've not seen it before, you can calculate it by first putting 1 on the outermost numbers:
-
+```
     1
    1 1
   1 _ 1
  1 _ _ 1
 1 _ _ _ 1
 
+```
 And then each number within the triangle can be calculated by adding the two numbers above it, to form this:
 
      1
