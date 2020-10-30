@@ -8,29 +8,41 @@ You see we think of brackets like [] or {} or () to use in our many wonderful la
 
 ### Example 1:
 Input
-```((your[drink {remember to}]) ovaltine)```
+```
+((your[drink {remember to}]) ovaltine)
+```
 Output
-```remember to drink your ovaltine```
+```
+remember to drink your ovaltine
+```
 
 ### Example 2:
 Input
-`[racket for {brackets (matching) is a} computers]`
+```
+[racket for {brackets (matching) is a} computers]
+```
 Output
-`matching brackets is a  racket for computers`
+```
+matching brackets is a  racket for computers
+```
 
 ### Example 3:
 
 Input
-`[can {and it(it (mix) up ) } look silly]`
+```
+[can {and it(it (mix) up ) } look silly]
+```
 Output:
-`mix it up and it can look silly`
+```
+mix it up and it can look silly
+```
 
 ## Notes:
 
 Assume your input is error checked.
-Bracket groups can be either [] or () or {} and there will be no mismatches.
-The pattern of when and what brackets are used is random. You could see all () or () then a [] then a () again. Etc.
-Every closing bracket will have an opening one that matches. So ] matches to a [ and ) matches to a ( and } matches to a {.
+Bracket groups can be either `[]` or `()` or `{}` and there will be no mismatches.
+The pattern of when and what brackets are used is random. You could see all `()` or `()` then a `[]` then a `()` again. Etc.
+Every closing bracket will have an opening one that matches. So `]` matches to a `[` and `)` matches to a `(` and `}` matches to a `{`.
 Whitespace can be random and you need to clean it up. Sometimes there are spaces between bracket symbols and sometimes not. Words will be separated clearly with at least 1 whitespace.
 Bracket levels will not be broken up between words. For example you would not see it like this.
 
