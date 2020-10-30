@@ -1,65 +1,54 @@
 #include <stdio.h>
+#include <iostream>
 #include <vector>
 
-std::vector<std::vector<unsigned int>> generatePiramid(unsigned int rank);
-void printPiramid(std::vector<std::vector<unsigned int>> piramid);
-void printPiramidRow(std::vector<unsigned int>);
+typedef unsigned int uint;
+
+std::vector<std::vector<uint>> generatePiramid(uint rank);
+void printPiramid(std::vector<std::vector<uint>> piramid);
+void printPiramidRow(std::vector<uint>);
 
 int main(){
-  std::vector<std::vector<unsigned int>> piramid;
-  unsigned int N = 5;
+  std::vector<std::vector<uint>> piramid;
 
   printf("[17042014] Challenge #153 [Easy] Pascal's Pyramid:\n");
 
-  piramid = generatePiramid(N);
+  piramid = generatePiramid(14);
   printPiramid(piramid);
 
   return 0;
 }
 
-std::vector<std::vector<unsigned int>> generatePiramid(unsigned int rank){
-  std::vector<std::vector<unsigned int>> result = std::vector<std::vector<unsigned int>>();
-  printf("Generating piramid...\n");
+std::vector<std::vector<uint>> generatePiramid(uint rank){
+  std::vector<std::vector<uint>> result = std::vector<std::vector<uint>>();
+  std::vector<uint> row, lastRow;
 
-  for (unsigned int n = 0; n <= rank; n++)
+  for (uint i = 0; i < rank; i++)
   {
-    std::vector<unsigned int> row;
-    std::vector<unsigned int> lastRow;
+    row = std::vector<uint>();
 
-    for (unsigned int index = 0; index < n+2; index++)
+    for (uint index = 0; index <= i; index++)
     {
-      row = std::vector<unsigned int>();
-      printf("n: %d\tindex: %d \n",index, n);
-      if(index == 0 || index == n) {
+      if(index == 0 || index == i)
         row.push_back(1);
-      } 
-      else{
-        printf("%d", lastRow.size());
-        unsigned int A = result.back().at(index - 1);
-        unsigned int B = result.back().at(index);
-
-        row.push_back(A + B);
-      }
+      else
+        row.push_back(lastRow.at(index-1) + lastRow.at(index));
     }
-    
+
+    lastRow = std::vector<uint>(row);
     result.push_back(row);
-    printPiramidRow(row);
   }
-
-  printf("Finished generating piramid.\n");
-  return std::vector<std::vector<unsigned int>>();
+  
+  return result;
 }
 
-void printPiramid(std::vector<std::vector<unsigned int>> piramid){
-  for (std::vector<std::vector<unsigned int>>::iterator it = piramid.begin() ; it != piramid.end(); ++it){
+void printPiramid(std::vector<std::vector<uint>> piramid){
+  for (std::vector<std::vector<uint>>::iterator it = piramid.begin() ; it != piramid.end(); ++it) 
     printPiramidRow(*it);
-  }
 }
 
-void printPiramidRow(std::vector<unsigned int> row){
-  for (size_t i = 0; i < row.size(); i++)
-  {
+void printPiramidRow(std::vector<uint> row){
+  for (size_t i = 0; i < row.size(); i++) 
     printf("%d ", row.at(i));
-  }
   printf("\n");
 }
