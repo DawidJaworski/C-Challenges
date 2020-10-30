@@ -8,8 +8,10 @@ typedef unsigned int uint;
 typedef std::pair<std::string, std::string> test;
 typedef std::map<uint, test> dictionary;
 
+std::string parseBrackets(std::string);
 void printDictionary(dictionary);
 void printTest(uint, test);
+bool testMethod(test);
 
 int main(){
   printf("[4/24/2014] Challenge #154 [Easy] March Madness Brackets\n");
@@ -36,6 +38,19 @@ int main(){
   printDictionary(results);
 
   return 0;
+}
+
+std::string parseBrackets(std::string input){
+  std::string output;
+
+  return output;
+}
+
+
+bool testMethod(test pattern){
+  bool result = false;
+
+  return result;
 }
 
 void printDictionary(dictionary dict){
