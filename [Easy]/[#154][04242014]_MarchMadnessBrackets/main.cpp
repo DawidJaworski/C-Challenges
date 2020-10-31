@@ -42,10 +42,9 @@ int main(){
 
 std::string parseBrackets(std::string input){
   std::string output;
-
+  output = "bullshit";
   return output;
 }
-
 
 bool testMethod(test pattern){
   bool result = false;
