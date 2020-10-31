@@ -58,7 +58,7 @@ std::string parseBrackets(std::string input){
   size_t matchPos = 0;
 
   uint counter = 0;
-  while(true){
+  while(inputBuffer.length() >= 0){
     // find last opening bracket from left
     matchPos = inputBuffer.find_last_of({'(','[','{'}, openingBracket);
     if(matchPos == std::string::npos){
@@ -83,7 +83,7 @@ std::string parseBrackets(std::string input){
     inputBuffer = inputBuffer.erase(openingBracket, closingBracket+1-openingBracket);
 
     // dispose enclosing brackets
-    buffer = buffer.substr(1,buffer.length()-2);
+    buffer = buffer.substr(1, buffer.length()-2);
 
     // remove space if present at the start of the string
     if(buffer.at(0) == ' ')
@@ -94,16 +94,14 @@ std::string parseBrackets(std::string input){
       buffer.append(" ");
 
     // remove double spaces from strings inside
-    matchPos = buffer.find("  ");
-    if(matchPos != std::string::npos)
-      buffer.erase(matchPos, 1); 
-    
-    // appent buffer to output
+    for (size_t index = buffer.length()-1; index > 0 ; index--)
+    {
+      if(buffer[index] == ' ' && buffer[index+1] == ' ')
+        buffer.erase(index, 1);
+    }
+
+    // append buffer to output
     output.append(buffer);
-    
-    counter++;
-    if(counter >= 4)
-      break;
   }
 
   return output;
