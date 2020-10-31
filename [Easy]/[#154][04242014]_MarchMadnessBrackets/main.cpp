@@ -42,7 +42,7 @@ int main(){
 
 std::string parseBrackets(std::string input){
   std::string output;
-  output = "bullshitsss";
+  output = "bullshitsssdd";
   return output;
 }
 
