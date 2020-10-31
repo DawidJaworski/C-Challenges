@@ -12,7 +12,6 @@ std::string parseBrackets(std::string);
 void printDictionary(dictionary);
 void printTest(uint, test);
 bool testMethod(test);
-int checkInput(std::string);
 
 int main(){
   printf("[4/24/2014] Challenge #154 [Easy] March Madness Brackets\n");
@@ -112,13 +111,6 @@ std::string parseBrackets(std::string input){
 
 bool testMethod(test pattern){
   return (bool) pattern.second.compare(parseBrackets(pattern.first));
-}
-
-int checkInput(std::string input){
-  bool result = false;
-  
-
-  return 0;
 }
 
 void printDictionary(dictionary dict){
