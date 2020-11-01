@@ -5,37 +5,28 @@
 #include <map>
 
 typedef unsigned int uint;
-typedef std::pair<std::string, std::string> test;
-typedef std::map<uint, test> dictionary;
+typedef std::map<std::string, std::string> dictionary;
 
 std::string parseBrackets(std::string);
+
 void printDictionary(dictionary);
-void printTest(uint, test);
-bool testMethod(test);
+
+dictionary dict = {
+  {"((your[drink {remember to}]) ovaltine)","remember to drink your ovaltine"},
+  {"[racket for {brackets (matching) is a} computers]","matching brackets is a racket for computers"},
+  {"[can {and it(it (mix) up ) } look silly]","mix it up and it can look silly"},
+  {"{years [four score] ago (and seven) our fathers}","four score and seven years ago our fathers"}
+};
 
 int main(){
   printf("[4/24/2014] Challenge #154 [Easy] March Madness Brackets\n");
-
-  dictionary dict, results;
-  dict.insert(std::pair<uint, test>(0, test(
-    "((your[drink {remember to}]) ovaltine)",
-    "remember to drink your ovaltine")));
-  dict.insert(std::pair<uint, test>(1, test(
-    "[racket for {brackets (matching) is a} computers]",
-    "matching brackets is a racket for computers")));
-  dict.insert(std::pair<uint, test>(2, test(
-    "[can {and it(it (mix) up ) } look silly]",
-    "mix it up and it can look silly")));
-  dict.insert(std::pair<uint, test>(3, test(
-    "{years [four score] ago (and seven) our fathers}",
-    "four score and seven years ago our fathers")));
-  results = dictionary(dict);
+  dictionary results= dictionary(dict);
 
   std::cout << "\nPattern:" << std::endl;
   printDictionary(dict);
 
   for (dictionary::iterator it = results.begin(); it != results.end(); ++it){
-    it->second.second = parseBrackets((it->second).first);
+    it->second = parseBrackets(it->first);
   }
 
   std::cout << "\nResults:" << std::endl;
@@ -107,15 +98,15 @@ std::string parseBrackets(std::string input){
   return output;
 }
 
-bool testMethod(test pattern){
-  return (bool) pattern.second.compare(parseBrackets(pattern.first));
-}
+void printDictionary(dictionary input){
+  uint maxLength = 0;
+  for (dictionary::iterator it = input.begin(); it != input.end(); ++it){
+    if(it->first.length() > maxLength)
+      maxLength = it->first.length();
+    if(it->second.length() > maxLength)
+      maxLength = it->second.length();
+  }
 
-void printDictionary(dictionary dict){
-  for (dictionary::iterator it = dict.begin(); it != dict.end(); ++it)
-    printTest(it->first, it->second);
-}
-
-void printTest(uint index, test input){
-  printf("[%2d]\t%50s\t->\t%-50s\n", index, input.first.data(), input.second.data());
+  for (dictionary::iterator it = input.begin(); it != input.end(); ++it)
+    printf("%*s => %-*s\n", maxLength, it->first.data(), maxLength, it->second.data());
 }
