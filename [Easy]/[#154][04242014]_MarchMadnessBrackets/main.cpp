@@ -4,98 +4,58 @@
 #include <string>
 #include <map>
 
+
+
 typedef unsigned int uint;
 typedef std::map<std::string, std::string> dictionary;
+typedef std::map<char,char> symbols;
+typedef std::map<size_t, size_t> coords;
+typedef std::map<size_t, char> data;
+typedef std::pair<size_t, char> record;
 
-std::string parseBrackets(std::string);
-
+data debugMethod(std::string);
+data debugMethod(std::string, bool);
 void printDictionary(dictionary);
 
+std::string _ERROR;
 dictionary dict = {
   {"((your[drink {remember to}]) ovaltine)","remember to drink your ovaltine"},
   {"[racket for {brackets (matching) is a} computers]","matching brackets is a racket for computers"},
   {"[can {and it(it (mix) up ) } look silly]","mix it up and it can look silly"},
   {"{years [four score] ago (and seven) our fathers}","four score and seven years ago our fathers"}
 };
+char brackets [6] = {'(','[','{',')',']','}'};
 
 int main(){
   printf("[4/24/2014] Challenge #154 [Easy] March Madness Brackets\n");
-  dictionary results= dictionary(dict);
+  data output;
 
-  std::cout << "\nPattern:" << std::endl;
-  printDictionary(dict);
-
-  for (dictionary::iterator it = results.begin(); it != results.end(); ++it){
-    it->second = parseBrackets(it->first);
-  }
-
-  std::cout << "\nResults:" << std::endl;
-  printDictionary(results);
+  output = debugMethod(dict.begin()->first, true);
+  printf("Error:\t%s\n", _ERROR.data());
 
   return 0;
 }
 
-std::string parseBrackets(std::string input){
-  std::string output,buffer;
-  std::string inputBuffer = input;
-  std::map<char,char> brackets = {
-    {'(',')'},
-    {'[',']'},
-    {'{','}'}
-  };
-  std::map<char,char>::iterator it;
-  size_t openingBracket = input.length();
-  size_t closingBracket = input.length();
+data debugMethod(std::string input){
+  return debugMethod(input, false);
+}
+
+data debugMethod(std::string input, bool verbose){
+  data results;
   size_t matchPos = 0;
 
-  uint counter = 0;
-  while(inputBuffer.length() >= 0){
-    // find last opening bracket from left
-    matchPos = inputBuffer.find_last_of({'(','[','{'}, openingBracket);
-    if(matchPos == std::string::npos){
-      break;
-    }
-    openingBracket = matchPos;
+  while(matchPos = input.find_first_of(brackets, matchPos) != std::string::npos) {
+    printf("%d\n", matchPos);
+    results.insert(record(matchPos, input[matchPos++]));
+  }
   
-    // get matching closing bracket
-    it = brackets.find(input[matchPos]);
-    if(it == brackets.end())
-      continue;
-
-    // search for nearest matching closing bracket to right
-    matchPos = inputBuffer.find_first_of(it->second, openingBracket);
-    if(matchPos == std::string::npos){
-      break;
-    }
-    closingBracket = matchPos;
-    
-    // extract matched brackets and remove it from input buffer
-    buffer = inputBuffer.substr(openingBracket, closingBracket+1-openingBracket);
-    inputBuffer = inputBuffer.erase(openingBracket, closingBracket+1-openingBracket);
-
-    // dispose enclosing brackets
-    buffer = buffer.substr(1, buffer.length()-2);
-
-    // remove space if present at the start of the string
-    if(buffer.at(0) == ' ')
-      buffer.erase(0, 1);
-
-    // add space if not present at the end of string
-    if(buffer.at(buffer.length()-1) != ' ')
-      buffer.append(" ");
-
-    // remove double spaces from strings inside
-    for (size_t index = buffer.length()-1; index > 0 ; index--)
-    {
-      if(buffer[index] == ' ' && buffer[index+1] == ' ')
-        buffer.erase(index, 1);
-    }
-
-    // append buffer to output
-    output.append(buffer);
+  if(verbose){
+    printf("[3%d]\t%s\n", input.length()-1, input.data());
+    for (data::iterator it = results.begin(); it != results.end(); ++it) 
+      printf("[%d]\t\'%c\'\n", it->first, it->second);
   }
 
-  return output;
+  return results;
 }
 
 void printDictionary(dictionary input){
