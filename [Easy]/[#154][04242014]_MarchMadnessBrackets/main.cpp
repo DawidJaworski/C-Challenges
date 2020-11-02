@@ -13,30 +13,35 @@ typedef std::pair<size_t, char> record;
 
 data findBrackets(std::string);
 data findBrackets(std::string, bool);
-coords checkErrors(data);
+coords matchBrackets(data);
 char getMatchingBracket(char);
 void printDictionary(dictionary);
 
 std::string _ERROR;
-dictionary dict = {
+const dictionary dict = {
   {"((your[drink {remember to}]) ovaltine)","remember to drink your ovaltine"},
   {"[racket for {brackets (matching) is a} computers]","matching brackets is a racket for computers"},
   {"[can {and it(it (mix) up ) } look silly]","mix it up and it can look silly"},
-  {"{years [four score] ago (and seven) our fathers}","four score and seven years ago our fathers"}
+  {"{years [four score] ago (and seven) our fathers}","four score and seven years ago our fathers"},
+  {"((your[drink {remember to))) ovaltine)", "Mismatched bracket ) instead of } found"},
+  {"[can {and it(it (mix) up ) look silly]", "Missing closing bracket"},
+  {"[racket for brackets (matching) is a} computers]", "Missing opening bracket"}
 };
-char brackets [6] = {'(','[','{',')',']','}'};
-//symbols bracketMap = {{'(',')'},{')','('},{'[',']'},{']','['},{'{','}'},{'}','{'}};
-symbols bracketMap = {{'(',')'},{'[',']'},{'{','}'}};
+const char brackets [6] = {'(','[','{',')',']','}'};
+const symbols bracketMap = {{'(',')'},{'[',']'},{'{','}'}};
 
 int main(){
   printf("[4/24/2014] Challenge #154 [Easy] March Madness Brackets\n\n");
-  data output;
+  data foundBrackets;
+  coords foundMatchingBrackets;
 
-  output = findBrackets(dict.begin()->first, true);
+  for (auto input = dict.begin(); input != dict.end(); ++input)
+  {
+    foundBrackets = findBrackets(input->first, true);
+    foundMatchingBrackets = matchBrackets(foundBrackets);
 
-
-
-  printf("Error:\t%s\n", _ERROR.data());
+    printf("Error:\t%s\n", _ERROR.data());
+  }
 
   return 0;
 }
@@ -63,22 +68,34 @@ data findBrackets(std::string input, bool verbose){
   return results;
 }
 
-coords checkErrors(data input){
-  coords matches;
+coords matchBrackets(data input){
+  coords results;
+  bool foundFirstClosingBracket = false;
+  record lastOperningBracket = record(-1, '#');
+  record firstClosingBracket = record(-1, '#');
+
   data inputCopy = data(input);
   while(inputCopy.size() > 0){
     for (data::iterator it = inputCopy.begin(); it != inputCopy.end(); ++it) {
       if(++it->second == getMatchingBracket(it->second)){
-        matches.insert(record(it->first, (++it)->first));
+        results.insert(record(it->first, (++it)->first));
         inputCopy.erase(it, ++it);
         break;
       }
-      
-      
-    }
+    }  
+
+    break;
   }
   
-  return matches;
+  for (data::iterator it = inputCopy.begin(); it != inputCopy.end(); ++it){
+    if(bracketMap.find(it->second) != bracketMap.end())
+      lastOperningBracket = record(*it);
+  }
+
+  printf("%-22s\t%3d %c\n", "Last opening bracket:", lastOperningBracket.first, lastOperningBracket.second);
+  printf("%-22s\t%3d %c\n", "First closing bracket:", firstClosingBracket.first, firstClosingBracket.second);
+
+  return results;
 }
 
 char getMatchingBracket(char bracket){
