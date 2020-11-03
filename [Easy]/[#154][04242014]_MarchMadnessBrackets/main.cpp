@@ -1,20 +1,31 @@
+#include <winnt.h>
 #include <stdio.h>
 #include <iostream>
 #include <vector>
 #include <string>
 #include <map>
+#include <queue>
 
 typedef std::map<std::string, std::string> dictionary;
 
-typedef std::map<size_t, size_t> coords;
+typedef std::queue<std::pair<size_t, size_t>> coords;
 typedef std::map<char,char> symbols;
 typedef std::map<size_t, char> data;
 typedef std::pair<size_t, size_t> coord;
 typedef std::pair<size_t, char> record;
 
+// Public methods
 data findBrackets(std::string);
 data findBrackets(std::string, bool);
 coords matchBrackets(data);
+coords matchBrackets(data, bool);
+std::string reverseBrackets(std::string, coords);
+std::string reverseBrackets(std::string, coords, bool);
+
+std::string parse(std::pair<std::string, std::string>);
+std::string parse(std::pair<std::string, std::string>, bool);
+
+// Private supporting methods
 char getMatchingBracket(char);
 bool isClosingBracket(char);
 void printDictionary(dictionary);
@@ -40,11 +51,15 @@ int main(){
   for (auto input = dict.begin(); input != dict.end(); ++input)
   {
     std::cout << "=======================================" << std::endl;
-    foundBrackets = findBrackets(input->first, true);
-    foundMatchingBrackets = matchBrackets(foundBrackets);
+    printf("Parsing:\t%s ...\n", input->first.data());
+    foundBrackets = findBrackets(input->first);
+    foundMatchingBrackets = matchBrackets(foundBrackets, true);
 
-    printf("Error:\t%s\n", _ERROR.data());
-    //break;
+
+    if(_ERROR != "")
+      printf("Error:\t\t%s\n", _ERROR.data());
+    else
+      printf("Result:\t\t%s\n", input->second.data());
   }
 
   return 0;
@@ -73,23 +88,25 @@ data findBrackets(std::string input, bool verbose){
 }
 
 coords matchBrackets(data input){
+  return matchBrackets(input, false);
+}
+coords matchBrackets(data input, bool verbose){
   coords results;
   bool exitLoop = false;
   record lastOperningBracket = record(-1, '#');
   record firstClosingBracket = record(-1, '#');
   _ERROR = "";
 
-
   data inputCopy = data(input);
-  printf("[%6s]\tinputCopy size = %d\n", "Before", inputCopy.size());
+  if(verbose) printf("[%6s]\tinputCopy size = %d\n", "Before", inputCopy.size());
   while(inputCopy.size() > 0){
     for (data::iterator it = inputCopy.begin(), itt = ++(inputCopy.begin()); it != --(inputCopy.end()); ++it, ++itt) {
       char matchingBracket = getMatchingBracket(it->second);
       char nextBracket = itt->second;
-      printf("Checking: %2d: '%c'->'%c' == %2d: '%c'\n", it->first, it->second, matchingBracket, itt->first, itt->second);
+      if(verbose) printf("Checking: %2d: '%c'->'%c' == %2d: '%c'\n", it->first, it->second, matchingBracket, itt->first, itt->second);
       if(itt->second == matchingBracket){
-        printf("Found match: %2d '%c' & %2d '%c'\n", it->first, it->second, itt->first, itt->second);
-        results.insert(coord(it->first, itt->first));
+        if(verbose) printf("Found match: %2d '%c' & %2d '%c'\n", it->first, it->second, itt->first, itt->second);
+        results.push(coord(it->first, itt->first));
         inputCopy.erase(itt);
         inputCopy.erase(it);
         break;
@@ -104,12 +121,27 @@ coords matchBrackets(data input){
     if(exitLoop) break;
   }
 
-  printf("results size = %d\n", results.size());
-  if(results.size() > 0)
-    for (auto it = results.begin(); it != results.end(); ++it)
-      printf("(%3d;%3d)\n", it->first, it->second);
+  if(verbose) printf("results size = %d\n", results.size());
 
   return results;
+}
+
+std::string reverseBrackets(std::string input, coords params){
+  return reverseBrackets(input, params, false);
+}
+std::string reverseBrackets(std::string input, coords params, bool verbose){
+  std::string result;
+
+
+
+  return result;
+}
+
+std::string parse(std::pair<std::string, std::string> input){
+  return parse(input, false);
+}
+std::string parse(std::pair<std::string, std::string> input, bool verbose){
+  return "";
 }
 
 char getMatchingBracket(char bracket){
