@@ -47,19 +47,20 @@ int main(){
   printf("[4/24/2014] Challenge #154 [Easy] March Madness Brackets\n\n");
   data foundBrackets;
   coords foundMatchingBrackets;
+  std::string result = "";
 
   for (auto input = dict.begin(); input != dict.end(); ++input)
   {
     std::cout << "=======================================" << std::endl;
     printf("Parsing:\t%s ...\n", input->first.data());
     foundBrackets = findBrackets(input->first);
-    foundMatchingBrackets = matchBrackets(foundBrackets, true);
-
+    foundMatchingBrackets = matchBrackets(foundBrackets);
+    result = reverseBrackets(input->first, foundMatchingBrackets, true);
 
     if(_ERROR != "")
       printf("Error:\t\t%s\n", _ERROR.data());
     else
-      printf("Result:\t\t%s\n", input->second.data());
+      printf("Result:\t\t%s\n", result.data());
   }
 
   return 0;
@@ -130,9 +131,25 @@ std::string reverseBrackets(std::string input, coords params){
   return reverseBrackets(input, params, false);
 }
 std::string reverseBrackets(std::string input, coords params, bool verbose){
-  std::string result;
+  std::string result, part;
+  size_t length, offset = 0;
 
+  if(params.size() <= 0){
+    printf("Params were empty!\n");
+    return "";
+  }
 
+  while(params.size() > 0){
+    length = params.front().second - params.front().first;
+    part = input.substr(params.front().first+1, length-1).append(" ");
+    input.erase(params.front().first, length);
+    result.append(part);
+    if(verbose) {
+      printf("%s\t[%d:%d]\n", input.data(), params.front().first, params.front().second);
+      printf("Appending...\t%s <- |%s|\n", result.data(), part.data());
+    }
+    params.pop();
+  }
 
   return result;
 }
