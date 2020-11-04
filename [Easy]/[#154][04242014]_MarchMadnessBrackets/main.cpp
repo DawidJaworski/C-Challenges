@@ -22,9 +22,6 @@ coords matchBrackets(data, bool);
 std::string reverseBrackets(std::string, coords);
 std::string reverseBrackets(std::string, coords, bool);
 
-std::string parse(std::pair<std::string, std::string>);
-std::string parse(std::pair<std::string, std::string>, bool);
-
 // Private supporting methods
 char getMatchingBracket(char);
 bool isClosingBracket(char);
@@ -55,12 +52,13 @@ int main(){
     printf("Parsing:\t%s ...\n", input->first.data());
     foundBrackets = findBrackets(input->first);
     foundMatchingBrackets = matchBrackets(foundBrackets);
-    result = reverseBrackets(input->first, foundMatchingBrackets, true);
 
     if(_ERROR != "")
       printf("Error:\t\t%s\n", _ERROR.data());
-    else
+    else{
+      result = reverseBrackets(input->first, foundMatchingBrackets);
       printf("Result:\t\t%s\n", result.data());
+    }
   }
 
   return 0;
@@ -132,33 +130,41 @@ std::string reverseBrackets(std::string input, coords params){
 }
 std::string reverseBrackets(std::string input, coords params, bool verbose){
   std::string result, part;
-  size_t length, offset = 0;
+  size_t lastStart, start, stop, length, offset = 0;
+  coord lastPos = coord(0,0);
 
   if(params.size() <= 0){
     printf("Params were empty!\n");
     return "";
   }
-
+ 
   while(params.size() > 0){
-    length = params.front().second - params.front().first;
-    part = input.substr(params.front().first+1, length-1).append(" ");
-    input.erase(params.front().first, length);
+    stop = params.front().second - offset;
+    if(params.front().first > lastPos.first)
+      start = params.front().first - offset;
+    else
+      start = params.front().first;
+    length = stop - start + 1;
+
+    part = input.substr(start+1, length-2).append(" ");
+    
     result.append(part);
     if(verbose) {
-      printf("%s\t[%d:%d]\n", input.data(), params.front().first, params.front().second);
+      printf("%s\t[%2d:%2d]\toff:%2d\n", input.data(), start, stop, offset);
       printf("Appending...\t%s <- |%s|\n", result.data(), part.data());
     }
+    
+    input.erase(start, length);
+    lastPos = coord(start, stop);
+    offset += length;
     params.pop();
   }
 
-  return result;
-}
+  for (size_t index = result.length(); index > 1; index--)
+    if(result[index] == ' ' && result[index] == result[--index])
+      result.erase(index, 1);
 
-std::string parse(std::pair<std::string, std::string> input){
-  return parse(input, false);
-}
-std::string parse(std::pair<std::string, std::string> input, bool verbose){
-  return "";
+  return result;
 }
 
 char getMatchingBracket(char bracket){
