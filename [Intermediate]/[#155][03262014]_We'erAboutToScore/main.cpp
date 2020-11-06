@@ -39,6 +39,7 @@ void printMove(move);
 
 int main(){
   moves game = parseInput("source_1.txt", false);
+  std::pair<size_t, size_t> result = countPoints(game);
 
   return 0;
 }
@@ -93,16 +94,16 @@ std::pair<size_t, size_t> countPoints(moves input, bool verbose){
   for (moves::iterator it = input.begin(); it != input.end(); ++it)
   {
     std::string currentMove = it->second;
-    
-    char pieceType;
     std::pair<size_t, size_t> destination = {9, 9};
+    char pieceType;
+    
+    printf("%8s  ", currentMove.data());
+    // remove CHECK mark if present
+    if(currentMove[currentMove.length()-1] == CHECK) 
+      currentMove = currentMove.substr(0, currentMove.length()-1);
+    
 
-    for (size_t i = currentMove.length()-1; i >= 0; i--)
-    {
-
-
-
-    }
+    printf("%8s\n", currentMove.data());
   }
   
 
@@ -111,5 +112,5 @@ std::pair<size_t, size_t> countPoints(moves input, bool verbose){
 
 
 void printMove(move input){
-  printf("[%c: %s]\n", input.first, input.second.c_str());
+  printf("[%c: %s]\n", input.first, input.second.data());
 }
