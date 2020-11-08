@@ -6,6 +6,7 @@
 #include <string>
 #include <exception>
 #include <algorithm>
+#include <regex>
 
 #define CAPTURE 'x'
 #define CHECK '+'
@@ -48,7 +49,7 @@ moves parseInput(std::string source){
   return parseInput(source, false);
 }
 moves parseInput(std::string source, bool verbose){
-  moves result = moves();
+  moves result;
   std::fstream fs;
 
   fs.open(source, std::fstream::in);
@@ -79,7 +80,7 @@ std::pair<size_t, size_t> countPoints(moves input){
   return countPoints(input, false);
 }
 std::pair<size_t, size_t> countPoints(moves input, bool verbose){
-  std::pair<size_t, size_t> result = std::pair<size_t, size_t>(0, 0); 
+  std::pair<size_t, size_t> result = {0, 0}; //Score White : Score Black
   char chessboard [8][8] = {
     {'R','N','B','Q','K','B','N','R'},
     {'p','p','p','p','p','p','p','p'},
@@ -91,22 +92,57 @@ std::pair<size_t, size_t> countPoints(moves input, bool verbose){
     {'R','N','B','Q','K','B','N','R'}
   };
 
+  std::regex matchPos ("([a-h][1-8])|([a-h]|[1-8])");
+  std::regex matchCastling ("(O(-O){1,2})");
+  std::regex matchCapture ("([KQBNR]?(([a-h]|[1-8])|([a-h][1-8]))?x([a-h][1-8]))");
+  std::smatch matchResult;
   for (moves::iterator it = input.begin(); it != input.end(); ++it)
   {
     std::string currentMove = it->second;
     std::pair<size_t, size_t> destination = {9, 9};
+    bool player = it->first == 'W' ? true : false;
     char pieceType;
     
-    printf("%8s  ", currentMove.data());
+    printf("%c: \"%s\"\n", it->first ,currentMove.data());
     // remove CHECK mark if present
     if(currentMove[currentMove.length()-1] == CHECK) 
       currentMove = currentMove.substr(0, currentMove.length()-1);
     
+    // apply castlig to default board
+    bool state = std::regex_search(currentMove, matchResult, matchCastling);
+    if(state){
+      size_t row = player ? 0 : 7;
+      if(currentMove == QUEENSLIDE){
+        chessboard[row][0] = ' ';
+        chessboard[row][1] = ' ';
+        chessboard[row][2] = 'K';
+        chessboard[row][3] = 'R';
+        chessboard[row][4] = ' ';
+      }
+      if(currentMove == KINGSLIDE){
+        chessboard[row][4] = ' ';
+        chessboard[row][5] = 'R';
+        chessboard[row][6] = 'K';
+        chessboard[row][7] = ' ';
+      }
+      continue;
+    }
 
-    printf("%8s\n", currentMove.data());
+    state = std::regex_search(currentMove, matchResult, matchPos);
+    if(state){
+      
+    }
+    state = std::regex_search(currentMove, matchResult, matchPos);
+
+    if(std::find(currentMove.begin(), currentMove.end(), 'x') != currentMove.end()){
+      
+      if(player) 
+        result.first += 1;
+      else 
+        result.second += 1;
+    }
   }
   
-
   return result;
 }
 
