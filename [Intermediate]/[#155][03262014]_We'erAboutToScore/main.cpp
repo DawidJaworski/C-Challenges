@@ -76,6 +76,10 @@ moves parseInput(std::string source, bool verbose){
   return result;
 }
 
+move removeCheckMark(move);
+char reversePieceSearch(char[8][8], moves::iterator, moves::iterator, std::string);
+std::string getCapturedPiece(moves);
+
 std::pair<size_t, size_t> countPoints(moves input){
   return countPoints(input, false);
 }
@@ -96,21 +100,19 @@ std::pair<size_t, size_t> countPoints(moves input, bool verbose){
   std::regex matchCastling ("(O(-O){1,2})");
   std::regex matchCapture ("([KQBNR]?(([a-h]|[1-8])|([a-h][1-8]))?x([a-h][1-8]))");
   std::smatch matchResult;
-  for (moves::iterator it = input.begin(); it != input.end(); ++it)
-  {
+
+  // remove CHECK mark if present - it's irrelvant in this task
+  std::transform(input.begin(), input.end(), input.begin(), removeCheckMark);
+  for (moves::iterator it = input.begin(); it != input.end(); ++it){
     std::string currentMove = it->second;
     std::pair<size_t, size_t> destination = {9, 9};
     bool player = it->first == 'W' ? true : false;
     char pieceType;
     
     printf("%c: \"%s\"\n", it->first ,currentMove.data());
-    // remove CHECK mark if present
-    if(currentMove[currentMove.length()-1] == CHECK) 
-      currentMove = currentMove.substr(0, currentMove.length()-1);
-    
+
     // apply castlig to default board
-    bool state = std::regex_search(currentMove, matchResult, matchCastling);
-    if(state){
+    if(std::regex_search(currentMove, matchResult, matchCastling)){
       size_t row = player ? 0 : 7;
       if(currentMove == QUEENSLIDE){
         chessboard[row][0] = ' ';
@@ -128,24 +130,38 @@ std::pair<size_t, size_t> countPoints(moves input, bool verbose){
       continue;
     }
 
-    state = std::regex_search(currentMove, matchResult, matchPos);
-    if(state){
-      
-    }
-    state = std::regex_search(currentMove, matchResult, matchPos);
+    if(std::regex_search(currentMove, matchResult, matchCapture)){
+      std::string target = currentMove.substr(currentMove.length()-2);
 
-    if(std::find(currentMove.begin(), currentMove.end(), 'x') != currentMove.end()){
-      
-      if(player) 
-        result.first += 1;
-      else 
-        result.second += 1;
+      char capturedPiece = reversePieceSearch(chessboard, input.begin(), it, target);
+
+      printf("capture %s[%c]\n", target.data(), capturedPiece);
     }
   }
   
   return result;
 }
 
+char reversePieceSearch(char chessboard[8][8] , moves::iterator first, moves::iterator last, std::string target){
+  char result ('#');
+
+  for(auto it = last; it != first; --it){
+    if(it->second.find(target) != std::string::npos){
+      
+    }
+  }
+
+  if(result == '#')
+    result = chessboard[target[0]-'a'][target[1]-'1'];
+
+  return result;
+}
+
+move removeCheckMark(move input){
+  if(input.second[input.second.length()-1] == CHECK) 
+      input.second = input.second.substr(0, input.second.length()-1);
+  return input;
+}
 
 void printMove(move input){
   printf("[%c: %s]\n", input.first, input.second.data());
