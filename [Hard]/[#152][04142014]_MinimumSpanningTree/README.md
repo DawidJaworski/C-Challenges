@@ -8,7 +8,7 @@ This means several things:
 * The tree must be connected. This means all the edges must be joined in some way. This is illustrated with an example below.
 
 Here are some examples to illustrate this concept. Take this [graph G](https://i.imgur.com/RIfsghM.png).
-Here is one [possible spanning tree](https://i.imgur.com/yf8K1AK.png). Note there may be (and probably will be) more than one valid spanning tree for a given graph. Here are some examples of invalid spanning trees, for several reasons:
+Here is one possible spanning tree: ![possible spanning tree](https://i.imgur.com/yf8K1AK.png). Note there may be (and probably will be) more than one valid spanning tree for a given graph. Here are some examples of invalid spanning trees, for several reasons:
 * [This one leaves out vertices C and E.](https://i.imgur.com/6CVjxpF.png)
 * [This one contains a cycle so it's not a tree.](https://i.imgur.com/cibmve1.png)
 * [This one is not fully connected - there is no path from B to F via this spanning tree.](https://i.imgur.com/eanfUzf.png)
