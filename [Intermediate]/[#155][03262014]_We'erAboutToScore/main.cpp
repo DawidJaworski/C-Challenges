@@ -23,6 +23,7 @@ struct ex : std::exception{
   const char* descript() const noexcept { return "Could not read file!"; }
 } err_readfail;
 
+// global variables
 pieces points = {
   {'p', 1},
   {'N', 3},
@@ -31,16 +32,32 @@ pieces points = {
   {'Q', 9}
 };
 
+std::regex matchPos ("([a-h][1-8])|([a-h]|[1-8])");
+std::regex matchCastling ("(O(-O){1,2})");
+std::regex matchCapture ("([KQBNR]?(([a-h]|[1-8])|([a-h][1-8]))?x([a-h][1-8]))");
+std::regex matchFigure ("[KQBNR]");
+
+// method definitions
 moves parseInput(std::string);
 moves parseInput(std::string, bool);
 std::pair<size_t, size_t> countPoints(moves);
 std::pair<size_t, size_t> countPoints(moves, bool);
-
 void printMove(move);
+move removeCheckMark(move);
+char reversePieceSearch(char[8][8], moves::iterator, moves::iterator, std::string);
 
+// Main function
 int main(){
-  moves game = parseInput("source_1.txt", false);
-  std::pair<size_t, size_t> result = countPoints(game);
+  std::string sources[2] = {
+    "source_1.txt",
+    "source_2.txt"
+  };
+
+  for(auto source : sources){
+    moves game = parseInput(source);
+    std::pair<size_t, size_t> result = countPoints(game);
+    printf("%s\nScore:\n\tW:%d - B:%d\n\n", source.data(), result.first, result.second);
+  }
 
   return 0;
 }
@@ -76,15 +93,13 @@ moves parseInput(std::string source, bool verbose){
   return result;
 }
 
-move removeCheckMark(move);
-char reversePieceSearch(char[8][8], moves::iterator, moves::iterator, std::string);
-std::string getCapturedPiece(moves);
-
 std::pair<size_t, size_t> countPoints(moves input){
   return countPoints(input, false);
 }
 std::pair<size_t, size_t> countPoints(moves input, bool verbose){
   std::pair<size_t, size_t> result = {0, 0}; //Score White : Score Black
+  std::smatch matchResult;
+
   char chessboard [8][8] = {
     {'R','N','B','Q','K','B','N','R'},
     {'p','p','p','p','p','p','p','p'},
@@ -96,22 +111,14 @@ std::pair<size_t, size_t> countPoints(moves input, bool verbose){
     {'R','N','B','Q','K','B','N','R'}
   };
 
-  std::regex matchPos ("([a-h][1-8])|([a-h]|[1-8])");
-  std::regex matchCastling ("(O(-O){1,2})");
-  std::regex matchCapture ("([KQBNR]?(([a-h]|[1-8])|([a-h][1-8]))?x([a-h][1-8]))");
-  std::smatch matchResult;
-
   // remove CHECK mark if present - it's irrelvant in this task
   std::transform(input.begin(), input.end(), input.begin(), removeCheckMark);
+
   for (moves::iterator it = input.begin(); it != input.end(); ++it){
     std::string currentMove = it->second;
-    std::pair<size_t, size_t> destination = {9, 9};
-    bool player = it->first == 'W' ? true : false;
-    char pieceType;
-    
-    printf("%c: \"%s\"\n", it->first ,currentMove.data());
+    bool player = it->first == 'W';
 
-    // apply castlig to default board
+    // apply castling to default board
     if(std::regex_search(currentMove, matchResult, matchCastling)){
       size_t row = player ? 0 : 7;
       if(currentMove == QUEENSLIDE){
@@ -130,12 +137,16 @@ std::pair<size_t, size_t> countPoints(moves input, bool verbose){
       continue;
     }
 
+    // count points if capture move
     if(std::regex_search(currentMove, matchResult, matchCapture)){
       std::string target = currentMove.substr(currentMove.length()-2);
-
       char capturedPiece = reversePieceSearch(chessboard, input.begin(), it, target);
+      if(player)
+        result.first += points[capturedPiece];
+      else
+        result.second += points[capturedPiece];
 
-      printf("capture %s[%c]\n", target.data(), capturedPiece);
+      if(verbose) printf("%c: \"%s\"\tcapture %s[%c] Score: %d - %d\n", it->first, currentMove.data(), target.data(), capturedPiece, result.first, result.second);
     }
   }
   
@@ -144,13 +155,21 @@ std::pair<size_t, size_t> countPoints(moves input, bool verbose){
 
 char reversePieceSearch(char chessboard[8][8] , moves::iterator first, moves::iterator last, std::string target){
   char result ('#');
+  int count = 1;
 
-  for(auto it = last; it != first; --it){
+  // search for first occurence of target coordinates and save piece CHAR
+  for(auto it = --last; it >= first; it--){
     if(it->second.find(target) != std::string::npos){
-      
+      std::smatch matchResult;
+      if(std::regex_search(it->second, matchResult, matchFigure))
+        result = it->second[0];
+      else
+        result = 'p';
+      break;
     }
   }
 
+  // if no result matched in moves list then get piece CHAR from actual chessboard
   if(result == '#')
     result = chessboard[target[0]-'a'][target[1]-'1'];
 
