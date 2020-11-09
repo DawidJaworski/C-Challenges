@@ -1,1 +1,1 @@
-# C-Challenges
+# C++ Challenges
