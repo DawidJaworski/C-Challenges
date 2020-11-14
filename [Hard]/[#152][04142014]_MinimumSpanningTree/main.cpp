@@ -59,7 +59,7 @@ data parseInput(std::string source, bool verbose){
     {
       if(verbose) printf("Assigning value to [%d:%d] pos=%d \"%s\"\n", row, col, match.position(), s_line.data());
       matrix[row][col] = std::atoi(match.str().data());
-      s_line = s_line.substr(match.position());
+      s_line.erase(0, match.length()+1);
 
       col++;
       if(col >= rank) break;
