@@ -6,6 +6,8 @@
 
 typedef std::pair<int**, size_t> data;
 
+// function declarations
+
 data parseInput(std::string);
 data parseInput(std::string, bool);
 
@@ -13,15 +15,18 @@ int** allocateMatrix(size_t, size_t);
 void deallocateMatrix(int**, size_t, size_t);
 void printMatrix(int**, size_t, size_t);
 
-int main(){
-  data input;
-  input = parseInput("source.txt", true);
+// main function
 
+int main(){
+  data input = parseInput("source.txt");
+  printf("Input matrix:\n");
   printMatrix(input.first, input.second, input.second);
 
   deallocateMatrix(input.first, input.second, input.second);
   return 0;
 }
+
+// function definitions
 
 data parseInput(std::string source){
   return parseInput(source, false);
