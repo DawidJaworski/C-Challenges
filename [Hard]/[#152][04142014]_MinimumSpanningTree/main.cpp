@@ -5,24 +5,43 @@
 #include <regex>
 
 typedef std::pair<int**, size_t> data;
+struct edge {
+  char v;
+  char u;
+  int weight;
+};
 
 // function declarations
 
 data parseInput(std::string);
 data parseInput(std::string, bool);
 
+data getMinSpannigTree(data);
+data getMinSpannigTree(data, bool);
+
 int** allocateMatrix(size_t, size_t);
 void deallocateMatrix(int**, size_t, size_t);
 void printMatrix(int**, size_t, size_t);
+void printEdges(std::vector<edge>);
 
 // main function
 
 int main(){
-  data input = parseInput("source.txt");
-  printf("Input matrix:\n");
-  printMatrix(input.first, input.second, input.second);
+  try
+  {
+    data input = parseInput("source.txt");
+    printf("Input matrix:\n");
+    printMatrix(input.first, input.second, input.second);
 
-  deallocateMatrix(input.first, input.second, input.second);
+    getMinSpannigTree(input, true);
+
+    deallocateMatrix(input.first, input.second, input.second);
+  }
+  catch(const std::exception& e)
+  {
+    std::cerr << e.what() << '\n';
+  }
+  
   return 0;
 }
 
@@ -80,6 +99,45 @@ data parseInput(std::string source, bool verbose){
   return data(matrix, rank);
 }
 
+data getMinSpannigTree(data input){
+  return getMinSpannigTree(input, false);
+}
+data getMinSpannigTree(data input, bool verbose){
+  data result;
+
+  std::vector<edge> minSpanningTree;
+  std::vector<edge> edges;
+
+  // build vector of edges from matrix 
+  for (size_t x = 0; x < input.second; x++)
+  {
+    for (size_t y = 1; y < input.second - 1; y++)
+    {
+      if(y <= x) continue;
+      int distance = input.first[x][y];
+      if(distance > 0){
+        edge E;
+        E.u = 'A' + x;
+        E.v = 'A' + y;
+        E.weight = distance;
+
+        edges.push_back(E);
+      }
+    }
+  }
+  
+  if(verbose){
+    printf("List of valid edges:\n");
+    printEdges(edges);
+    printf("Building minimum spanning tree...\n");
+  }
+  // build minimum spanning tree
+
+
+
+  return result;
+}
+
 int** allocateMatrix(size_t m, size_t n){
   int** result = new int*[m];
   for (size_t row = 0; row < m; row++)
@@ -98,9 +156,14 @@ void printMatrix(int** matrix, size_t rows, size_t cols){
   for (size_t row = 0; row < rows; row++)
   {
     for (size_t col = 0; col < cols; col++)
-      printf("%10d  ", matrix[row][col]);
+      printf("%4d  ", matrix[row][col]);
     printf("\n");
   }
   return;
+}
+void printEdges(std::vector<edge> edges){
+  for(auto e : edges){
+    printf("|%c%c|=%d\n", e.u, e.v, e.weight);
+  }
 }
 
