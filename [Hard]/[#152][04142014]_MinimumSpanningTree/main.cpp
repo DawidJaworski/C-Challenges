@@ -21,26 +21,20 @@ data getMinSpannigTree(data, bool);
 
 int** allocateMatrix(size_t, size_t);
 void deallocateMatrix(int**, size_t, size_t);
+bool compareEdges(edge, edge);
 void printMatrix(int**, size_t, size_t);
 void printEdges(std::vector<edge>);
 
 // main function
 
 int main(){
-  try
-  {
-    data input = parseInput("source.txt");
-    printf("Input matrix:\n");
-    printMatrix(input.first, input.second, input.second);
+  data input = parseInput("source.txt");
+  printf("Input matrix:\n");
+  printMatrix(input.first, input.second, input.second);
 
-    getMinSpannigTree(input, true);
+  getMinSpannigTree(input, true);
 
-    deallocateMatrix(input.first, input.second, input.second);
-  }
-  catch(const std::exception& e)
-  {
-    std::cerr << e.what() << '\n';
-  }
+  deallocateMatrix(input.first, input.second, input.second);
   
   return 0;
 }
@@ -126,6 +120,8 @@ data getMinSpannigTree(data input, bool verbose){
     }
   }
   
+  std::sort(edges.begin(), edges.end(), compareEdges);
+
   if(verbose){
     printf("List of valid edges:\n");
     printEdges(edges);
@@ -151,6 +147,9 @@ void deallocateMatrix(int** matrix, size_t m, size_t n){
   delete[] matrix;
 
   return;
+}
+bool compareEdges(edge A, edge B){
+  return A.weight < B.weight;
 }
 void printMatrix(int** matrix, size_t rows, size_t cols){
   for (size_t row = 0; row < rows; row++)
