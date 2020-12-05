@@ -1,15 +1,10 @@
 #include <stdio.h>
 #include <iostream>
-#include <string>
 #include <fstream>
+#include <string>
 #include <regex>
-
-typedef std::pair<int**, size_t> data;
-struct edge {
-  char v;
-  char u;
-  int weight;
-};
+#include "header/typeDefs.hpp"
+#include "header/disjoinedSet.hpp"
 
 // function declarations
 
@@ -31,11 +26,8 @@ int main(){
   data input = parseInput("source.txt");
   printf("Input matrix:\n");
   printMatrix(input.first, input.second, input.second);
-
   getMinSpannigTree(input, true);
-
   deallocateMatrix(input.first, input.second, input.second);
-  
   return 0;
 }
 
@@ -129,7 +121,11 @@ data getMinSpannigTree(data input, bool verbose){
   }
   // build minimum spanning tree
 
-
+  disjointSet<edge> set;
+  //set.MakeSet(edges);
+  //set.Print();
+  //set.Union(edges.at(0), edges.at(1));
+  //set.Print();
 
   return result;
 }
@@ -165,4 +161,4 @@ void printEdges(std::vector<edge> edges){
     printf("|%c%c|=%d\n", e.u, e.v, e.weight);
   }
 }
-
+ 
