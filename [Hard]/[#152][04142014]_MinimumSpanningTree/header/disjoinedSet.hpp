@@ -1,19 +1,23 @@
 #ifndef DISJOINEDSET_HPP
 #define DISJOINEDSET_HPP
 
-#include <unordered_map>
-#include <vector>
 #include <iostream>
+#include <vector>
+#include <unordered_map>
 
-template <class T>
-class disjointSet {
-  std::unordered_map<T, int> *data;
+#include "typeDefs.hpp"
+
+class disjoinedSet {
+  private:
+    std::unordered_map<edge, int> data;
   public:
-    disjointSet();
-    void MakeSet(std::vector<T> const &);
-    void Union(T, T);
-    T Find(T);
+    disjoinedSet() { MakeSet(std::vector<edge>()); };
+    void MakeSet(std::vector<edge> const &);
+    void Union(edge, edge);
+    edge Find(edge);
     void Print();
 };
+
+
 
 #endif /* !DISJOINEDSET_HPP */

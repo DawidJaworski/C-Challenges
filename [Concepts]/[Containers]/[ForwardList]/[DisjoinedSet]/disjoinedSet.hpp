@@ -11,7 +11,8 @@ class disjoinedSet{
     std::vector<std::forward_list<T>> data {};
   public:
     void makeSet(T element);
-    void mergeSets(std::forward_list<T> parent, std::forward_list<T> child);
+    void mergeSets(std::vector<std::forward_list<T>>::iterator parent, std::vector<std::forward_list<T>>::iterator child);
+    void mergeSets(T parent, T child);
     typename std::vector<std::forward_list<T>>::iterator find(T element);
     typename std::vector<std::forward_list<T>>::iterator Begin();
     typename std::vector<std::forward_list<T>>::iterator End();
@@ -25,8 +26,13 @@ void disjoinedSet<T>::makeSet(T element){
 }
 
 template <typename T>
-void disjoinedSet<T>::mergeSets(std::forward_list<T> parent, std::forward_list<T> child){
+void disjoinedSet<T>::mergeSets(std::vector<std::forward_list<T>>::iterator parent, std::vector<std::forward_list<T>>::iterator child){
+  
+}
 
+template <typename T>
+void disjoinedSet<T>::mergeSets(T parent, T child){
+  
 }
 
 template <typename T>

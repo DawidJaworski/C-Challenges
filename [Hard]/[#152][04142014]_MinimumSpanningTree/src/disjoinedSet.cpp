@@ -1,41 +1,33 @@
 #include "../header/disjoinedSet.hpp"
 
-template <class T>
-disjointSet<T>::disjointSet(){
-  data = std::unordered_map<T,int>();
-  return;
-}
-
-template <class T>
-void disjointSet<T>::MakeSet(std::vector<T> const &dataset){
+void disjoinedSet::MakeSet(std::vector<edge> const &dataset){
   int setID = 0;
-  for (T e : dataset){
-    data[e] = setID++;
+  for (edge e : dataset){
+    data.at(e) = setID++;
   }
 }
 
-template <class T>
-T disjointSet<T>::Find(T value){
+edge disjoinedSet::Find(edge value){
+  auto it = data.begin();
   int setID = data[value];
-  int elementIndex = std::distance(data.begin(), data.find(value));
+  int elementIndex = std::distance(it, data.find(value));
   if(setID == elementIndex) // check for root element
     return value;
-  return Find(data.begin()+elementIndex);
+
+  std::advance(it, elementIndex);
+  return Find(it->first);
 }
 
-template <class T>
-void disjointSet<T>::Union(T parent, T child){
-  T parentRoot = Find(parent);
-  T childRoot = Find(child);
+void disjoinedSet::Union(edge parent, edge child){
+  edge parentRoot = Find(parent);
+  edge childRoot = Find(child);
 
   data[childRoot] = data.find(parentRoot)->second; 
 }
 
-template <class T>
-void disjointSet<T>::Print(){
+void disjoinedSet::Print(){
   printf("========================================\n");
-  for(T e : data){
-    printf("edge:|%c%c| id:%d pos:%d \n");
-  }
+  for(auto &e : data)
+    printf("edge:|%c%c| id:%d pos:%d \n", 'A', 'A', 0, 0);
   printf("========================================\n");
 }
